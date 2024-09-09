@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Tag;
 use App\Models\Project;
 use App\Models\ProjectImage;
 use Illuminate\Http\Request;
@@ -12,17 +13,36 @@ class ProjectController extends Controller
         $this->middleware('auth')->except(['index', 'show']);;
     }
 
-    public function index() {
-        $projects = Project::with('images')->get();
+    public function index(Request $request) {
+        $query = Project::with(['images', 'tags']);
+
+        if ($request->has('overview_filter')) {
+            $filter = $request->input('overview_filter');
+
+            $query->where(function ($q) use ($filter) {
+                $q->where('title', 'LIKE', "%{$filter}%")
+                  ->orWhereHas('tags', function ($q) use ($filter) {
+                      $q->where('name', 'LIKE', "%{$filter}%");
+                  });
+            });
+        }
+
+        $projects = $query->get();
+
         return view('projects.index', compact('projects'));
     }
 
     public function create() {
-        return view('projects.create');
+        $tags = Tag::all();
+        return view('projects.create', compact('tags'));
     }
 
     public function store(Request $request) {
         $project = Project::create($request->all());
+
+        if ($request->has('tags')) {
+            $project->tags()->attach($request->input('tags'));
+        }
 
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $image) {

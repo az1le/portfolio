@@ -20,6 +20,18 @@
             <input class="form-control" type="file" name="images[]" multiple required>
         </div>
 
+        <div class="mb-3">
+            <label for="tags" class="form-label">Tags</label>
+            @foreach ($tags as $tag)
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="tags[]" value="{{ $tag->id }}" id="tag{{ $tag->id }}">
+                    <label class="form-check-label" for="tag{{ $tag->id }}">
+                        {{ $tag->name }}
+                    </label>
+                </div>
+            @endforeach
+        </div>
+
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
 @endsection
