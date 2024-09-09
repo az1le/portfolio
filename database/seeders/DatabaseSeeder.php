@@ -20,5 +20,9 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make(env('ADMIN_PASSWORD')),
             'is_admin' => 1,
         ]);
+
+        $this->call([
+            TagSeeder::class,
+        ]);
     }
 }
