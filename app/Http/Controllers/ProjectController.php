@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 class ProjectController extends Controller
 {
     public function __construct() {
-        $this->middleware('auth')->except('index');;
+        $this->middleware('auth')->except(['index', 'show']);;
     }
 
     public function index() {
@@ -35,7 +35,7 @@ class ProjectController extends Controller
             }
         }
 
-        return redirect()->route('home')->with('success', 'Project successfully created!');
+        return redirect()->route('projects.index')->with('success', 'Project successfully created!');
     }
 
     public function show(Project $project) {

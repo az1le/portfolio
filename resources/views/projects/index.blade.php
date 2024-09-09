@@ -1,13 +1,15 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="row align-items-center">
+    <div class="row align-items-center mb-2">
         <div class="col-auto">
             <h2>My Projects</h2>
         </div>
+        @auth
         <div class="col-auto ms-auto">
             <a href="{{ route('projects.create') }}" class="btn btn-primary">Add Project</a>
         </div>
+        @endauth
     </div>
     <div class="row">
         @foreach($projects as $project)

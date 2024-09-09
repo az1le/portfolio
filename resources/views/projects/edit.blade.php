@@ -26,20 +26,48 @@
                 <button type="submit" class="btn btn-primary">Submit</button>
             </div>
             <div class="col-auto ms-auto">
-                <button type="button" onclick="confirmDelete()" class="btn btn-danger"><i class="fas fa-trash"></i></button>
+                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal"><i class="fas fa-trash"></i></button>
             </div>
         </div>
     </form>
+
     <form action="{{ route('projects.destroy', $project) }}" method="post" id="delete-form">
         @csrf
         @method('DELETE')
+        <input type="hidden" name="project_name_confirmation" id="project-name-confirmation">
         <button type="submit" class="d-none"></button>
     </form>
 
+    <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmDeleteModalLabel">Confirm Deletion</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>To delete this project, type the project name: <strong>{{ $project->title }}</strong></p>
+                    <input type="text" class="form-control" id="projectNameInput" placeholder="Type project name to confirm">
+                    <div id="error-message" class="text-danger mt-2" style="display: none;">The project name is incorrect.</div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger" onclick="confirmDeletion()">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
-        function confirmDelete() {
-            if (confirm('Weet je zeker dat je deze project wilt verwijderen?')) {
+        function confirmDeletion() {
+            const projectNameInput = document.getElementById('projectNameInput').value;
+            const projectTitle = "{{ $project->title }}";
+
+            if (projectNameInput === projectTitle) {
+                document.getElementById('project-name-confirmation').value = projectNameInput;
                 document.getElementById('delete-form').submit();
+            } else {
+                document.getElementById('error-message').style.display = 'block';
             }
         }
     </script>
