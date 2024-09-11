@@ -63,12 +63,35 @@ class ProjectController extends Controller
     }
 
     public function edit(Project $project) {
-        return view('projects.edit', compact('project'));
+        $tags = Tag::all();
+        return view('projects.edit', compact('project', 'tags'));
     }
 
     public function update(Request $request, Project $project) {
         $project->update($request->all());
-        return redirect()->route('projects.index')->with('success', 'Project updated successfully.');
+
+        // Update tags
+        if ($request->has('tags')) {
+            // Detach all existing tags
+            $project->tags()->detach();
+
+            // Attach new tags
+            $project->tags()->attach($request->input('tags'));
+        }
+
+        // Update images
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $image) {
+                $path = $image->store('project_images', 'public');
+
+                ProjectImage::create([
+                    'project_id' => $project->id,
+                    'file_path' => $path,
+                ]);
+            }
+        }
+
+        return redirect()->route('projects.show', $project->id)->with('success', 'Project updated successfully.');
     }
 
     public function destroy(Project $project) {

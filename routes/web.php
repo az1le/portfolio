@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\ProjectImageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,3 +23,4 @@ Route::get('/', function () {
 Auth::routes(['register' => false]);
 
 Route::resource('projects', ProjectController::class);
+Route::get('project-images/{image}', [ProjectImageController::class, 'destroy'])->name('project-images.destroy');

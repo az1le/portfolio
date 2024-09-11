@@ -16,10 +16,40 @@
             <textarea class="form-control" name="description" rows="3">{{ old('description', $project->description) }}</textarea>
         </div>
 
-        {{-- <div class="mb-3">
+        <div class="mb-3">
             <label for="formFileMultiple" class="form-label">Images</label>
             <input class="form-control" type="file" name="images[]" multiple>
-        </div> --}}
+            <div class="mt-2">
+                @foreach ($project->images as $image)
+                    <div class="d-inline-block me-2 text-center">
+                        <div class="border shadow-sm">
+                            <a href="{{ asset('storage/' . $image->file_path) }}" target="_blank">
+                                <img src="{{ asset('storage/' . $image->file_path) }}" alt="Image" style="width: 100px; height: auto;">
+                            </a>
+                        </div>
+
+                        <div class="mt-2">
+                            <a href="{{ route('project-images.destroy', $image) }}" onclick="return confirm('Are you sure you want to delete this image?');">
+                                <i class="fa-solid fa-trash text-danger"></i>
+                            </a>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label for="tags" class="form-label">Tags</label>
+            @foreach ($tags as $tag)
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="tags[]" value="{{ $tag->id }}" id="tag{{ $tag->id }}"
+                        {{ $project->tags->contains($tag->id) ? 'checked' : '' }}>
+                    <label class="form-check-label" for="tag{{ $tag->id }}">
+                        {{ $tag->name }}
+                    </label>
+                </div>
+            @endforeach
+        </div>
 
         <div class="row align-items-center">
             <div class="col-auto">

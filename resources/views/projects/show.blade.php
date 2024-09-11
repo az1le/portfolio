@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <h2>
+    <h2 class="mb-4">
         {{ $project->title }}
         @auth
         <a href="{{ route('projects.edit', $project) }}"><i class="fa-solid fa-pen fs-5"></i></a>
