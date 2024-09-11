@@ -16,10 +16,12 @@ class ProjectController extends Controller
     public function index(Request $request) {
         $query = Project::with(['images', 'tags']);
 
+        // Apply filter if present
         if ($request->has('overview_filter')) {
             $filter = $request->input('overview_filter');
 
             $query->where(function ($q) use ($filter) {
+                // Filter by title or tag name
                 $q->where('title', 'LIKE', "%{$filter}%")
                   ->orWhereHas('tags', function ($q) use ($filter) {
                       $q->where('name', 'LIKE', "%{$filter}%");
@@ -27,6 +29,7 @@ class ProjectController extends Controller
             });
         }
 
+        // Get filtered projects
         $projects = $query->get();
 
         return view('projects.index', compact('projects'));
@@ -40,10 +43,13 @@ class ProjectController extends Controller
     public function store(Request $request) {
         $project = Project::create($request->all());
 
+        // Attach tags if provided
         if ($request->has('tags')) {
             $project->tags()->attach($request->input('tags'));
         }
 
+
+        // Save images if provided
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $image) {
                 $path = $image->store('project_images', 'public');
@@ -70,7 +76,6 @@ class ProjectController extends Controller
     public function update(Request $request, Project $project) {
         $project->update($request->all());
 
-        // Update tags
         if ($request->has('tags')) {
             // Detach all existing tags
             $project->tags()->detach();
@@ -79,7 +84,6 @@ class ProjectController extends Controller
             $project->tags()->attach($request->input('tags'));
         }
 
-        // Update images
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $image) {
                 $path = $image->store('project_images', 'public');

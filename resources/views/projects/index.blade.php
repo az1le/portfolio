@@ -10,7 +10,10 @@
             <div class="row align-items-center">
                 <div class="col-auto">
                     <form action="{{ route('projects.index') }}" method="GET">
-                        <input type="text" name="overview_filter" class="form-control" placeholder="Filter by name or tag" value="{{ old('overview_filter', request()->query('overview_filter')) }}">
+                        <div class="input-group">
+                            <input type="text" name="overview_filter" class="form-control border border-primary border-end-0" style="box-shadow: none;" placeholder="Filter by name or tag" value="{{ old('overview_filter', request()->query('overview_filter')) }}">
+                            <button type="submit" class="btn btn-outline-primary border-start-0 bg-light"><i class="fa-solid fa-magnifying-glass text-primary"></i></button>
+                        </div>
                     </form>
                 </div>
                 @auth
@@ -33,7 +36,7 @@
                     <img src="{{ $firstImage ? asset('storage/' . $firstImage->file_path) : 'default-image.jpg' }}" class="card-img-top" alt="Project Image">
                     <div class="card-body">
                         <h5 class="card-title">{{ $project->title }}</h5>
-                        <p class="card-text">{{ $project->description }}</p>
+                        <p class="card-text">{{ Str::limit($project->description, 100) }}</p>
                         @foreach($project->tags as $tag)
                             <span class="badge text-bg-dark">{{ $tag->name }}</span>
                         @endforeach

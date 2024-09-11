@@ -8,12 +8,12 @@
 
         <div class="mb-3">
             <label for="title" class="form-label">Title</label>
-            <input type="text" class="form-control" name="title" value="{{ old('title', $project->title) }}">
+            <input type="text" class="form-control" name="title" value="{{ old('title', $project->title) }}" required>
         </div>
 
         <div class="mb-3">
             <label for="description" class="form-label">Description</label>
-            <textarea class="form-control" name="description" rows="3">{{ old('description', $project->description) }}</textarea>
+            <textarea class="form-control" name="description" rows="3" required>{{ old('description', $project->description) }}</textarea>
         </div>
 
         <div class="mb-3">
